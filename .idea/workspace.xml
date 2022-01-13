@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="5211a1dc-ab0c-4b10-a1cb-066fe8d1836f" name="Changes" comment="" />
+    <list default="true" id="4068123c-9275-41ed-84f7-8da850d64957" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS_Project/.vs/JS_Project/v17/.suo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS_Project/JS_Project.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS_Project/JS_Project/Data/connection_matrix.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS_Project/JS_Project/JS_Project.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS_Project/JS_Project/JS_Project.pyproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS_Project/JS_Project/JS_Project.pyproj.user" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JS_Project/JS_Project/trainStation.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,7 +29,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="238rdbr89tFYaVFTgsMsGix3IUj" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="23WK8Hz4uJoT03ebwDsOIb5gIR5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -28,7 +43,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
-    <configuration name="Unnamed" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="JS_Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -36,11 +51,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="F:\Anaconda\python.exe" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -53,11 +68,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5211a1dc-ab0c-4b10-a1cb-066fe8d1836f" name="Changes" comment="" />
-      <created>1641126645204</created>
+      <changelist id="4068123c-9275-41ed-84f7-8da850d64957" name="Changes" comment="" />
+      <created>1641844241792</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1641126645204</updated>
+      <updated>1641844241792</updated>
     </task>
     <servers />
   </component>
