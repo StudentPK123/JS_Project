@@ -5,7 +5,6 @@ from tkinter import ttk
 from Graphs.graphs import *
 from Exceptions.exceptions import *
 
-
 def show_error_message_tk(error):
     tk.messagebox.showerror(title="Bład",
                             message="{}".format(error))
@@ -22,6 +21,9 @@ def show_error_message(error : RailwayConnectionError):
 class MainWindow():
     def __init__(self):
         self.root = tk.Tk()
+        self.graph_neighborhood_matrix = NeighborhoodMatrix()
+        self.graph_adjacency_lists = AdjacencyLists()
+        self.current_graph = self.graph_neighborhood_matrix
         self.root.title("System połączeń kolejowych")
         self.root.configure(bg='lightgray')
 
@@ -47,9 +49,9 @@ class MainWindow():
         self.destination_combo.pack(padx=25, pady=5)
 
         #connect/disconnect button
-        button1 = tk.Button(tab_setting, text="Połącz", command= lambda: self.manage_connection_button_handler(True))
+        button1 = tk.Button(tab_setting, text="Połącz", command=lambda: self.manage_connection_button_handler(True))
         button1.pack(padx=5, pady=5)
-        button2 = tk.Button(tab_setting, text="Rołącz", command= lambda: self.manage_connection_button_handler(False))
+        button2 = tk.Button(tab_setting, text="Rołącz", command=lambda: self.manage_connection_button_handler(False))
         button2.pack(padx=5, pady=5)
 
         #selecting a neighborhood type
@@ -67,10 +69,10 @@ class MainWindow():
         self.tv_connections['columns'] = CITY_LIST
 
         for city in CITY_LIST:
-            self.tv_connections.column(city, anchor=tk.CENTER, width=70, stretch=0)
+            self.tv_connections.column(city, anchor=tk.CENTER, width=70)
             self.tv_connections.heading(city, text=city, anchor=tk.CENTER)
 
-        self.tv_connections.column('#0', width=95, anchor=tk.W, stretch=0)
+        self.tv_connections.column('#0', width=95, anchor=tk.W)
         self.tv_connections.heading('#0', text='', anchor=tk.W)
 
         self.update_connections_tree_list()
@@ -91,9 +93,12 @@ class MainWindow():
 
         self.root.mainloop()
 
-    def update_connections_tree_list(self):
+    def update_graph(self, graph):
+        graph.update()
+        self.current_graph = graph
 
-        self.tv_connections.delete(*self.tv_connections.get_children())
+    def update_connections_tree_list(self):
+        self.tv_connections.delete(*self.tv_connections.get_children()) #cleaning treeview
         i = 0
         for city in CITY_LIST:
             connection_values = []
@@ -105,6 +110,7 @@ class MainWindow():
     def find_connection_button_handler(self):
         start = self.user_serach_start_combo.get().strip()
         destination = self.user_serach_destination_combo.get().strip()
+
         if not start or not destination:
             show_error_message_tk("Aby wyszukać połączenie musisz wybrać miejsce początkowe oraz docelowe!")
         path = self.current_graph.find_connection(start, destination)
@@ -112,9 +118,14 @@ class MainWindow():
             show_error_message_tk("Niestety nie udało nam się znaleść połączenia!")
             return
 
+        self.connections_label.config(text=", ".join(["{} -> {}".format(
+            self.current_graph.get_city_by_index(path[i - 1]), self.current_graph.get_city_by_index(path[i])) for i in
+                                                      range(1, len(path))]))
+
     def manage_connection_button_handler(self, connect):
         start = self.start_combo.get().strip()
         destination = self.destination_combo.get().strip()
+
         if not start or not destination:
             show_error_message_tk("Aby modyfikować połączenie musisz wybrać miejsce początkowe oraz docelowe!")
             return
@@ -133,5 +144,6 @@ class MainWindow():
                                                                                   start, destination))
             self.update_connections_tree_list()
             self.current_graph.update()
+
         except RailwayConnectionError as error:
             show_error_message(error)
