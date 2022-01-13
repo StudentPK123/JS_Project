@@ -1,2 +1,4 @@
+from UI.windows import *
+
 if __name__ == '__main__':
-    pass
+    main_window = MainWindow()

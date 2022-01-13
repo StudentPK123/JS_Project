@@ -14,7 +14,7 @@ CITY_LIST = [
     "Kołobrzeg"
 ]
 
-#list of train connections between the various cities 
+#list of train connections between the various cities
 RAILWAY_CONNECTIONS = [
     ("Kraków","Wrocław"),
     ("Kraków","Gniezno"),
