@@ -1,4 +1,4 @@
-from Database.database import *
+from database.Database import *
 from abc import abstractmethod
 
 
@@ -32,7 +32,7 @@ class AbstractGraph:
         q.append(path.copy())
 
         while q:
-            path = q.pop()
+            path = q.pop(0)
             last = path[-1]
 
             if last == destination_index:

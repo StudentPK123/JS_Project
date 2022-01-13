@@ -16,10 +16,17 @@ CITY_LIST = [
 
 #list of train connections between the various cities
 RAILWAY_CONNECTIONS = [
-    ("Kraków","Wrocław"),
     ("Kraków","Gniezno"),
+    ("Kraków","Wrocław"),
+    ("Gniezno","Wrocław"),
     ("Wrocław","Kalisz"),
+    ("Kalisz","Kołobrzeg"),
     ("Kołobrzeg","Poznań"),
     ("Gniezno","Kołobrzeg"),
-    ("Kołobrzeg","Kraków")
+    ("Kołobrzeg","Kraków"),
+    ("Kielce","Poznań"),
+    ("Poznań","Giżycko"),
+    ("Giżycko","Białystok"),
+    ("Białystok","Kalisz"),
+    ("Kalisz","Poznań")
 ]

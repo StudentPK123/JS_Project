@@ -2,8 +2,8 @@ import tkinter as tk
 import tkinter.messagebox
 from tkinter import ttk
 
-from Graphs.graphs import *
-from Exceptions.exceptions import *
+from graphs.Graphs import *
+from exceptions.Exceptions import *
 
 def show_error_message_tk(error):
     tk.messagebox.showerror(title="Bład",
