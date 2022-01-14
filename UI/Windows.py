@@ -21,8 +21,11 @@ def show_error_message(error : RailwayConnectionError):
 class MainWindow():
     def __init__(self):
         self.root = tk.Tk()
-        self.graph_neighborhood_matrix = NeighborhoodMatrix()
-        self.graph_adjacency_lists = AdjacencyLists()
+        self.database = Database(CITY_LIST, RAILWAY_CONNECTIONS)
+        self.database.add_update_callback(self.on_update_database_connection)
+        self.database.add_realod_callback(self.on_reload_database)
+        self.graph_neighborhood_matrix = NeighborhoodMatrix(self.database)
+        self.graph_adjacency_lists = AdjacencyLists(self.database)
         self.current_graph = self.graph_neighborhood_matrix
         self.root.title("System połączeń kolejowych")
         self.root.configure(bg='lightgray')
@@ -39,22 +42,23 @@ class MainWindow():
         label1 = tk.Label(tab_setting, text="Miejsce początkowe")
         label1.pack(padx=5, pady=5)
 
-        self.start_combo = ttk.Combobox(tab_setting, values=CITY_LIST)
+        self.start_combo = ttk.Combobox(tab_setting, values=self.database.get_city_list())
         self.start_combo.pack(padx=25, pady=5)
 
         label2 = tk.Label(tab_setting, text="Miejsce docelowe")
         label2.pack(padx=5, pady=5)
 
-        self.destination_combo = ttk.Combobox(tab_setting, values=CITY_LIST)
+        self.destination_combo = ttk.Combobox(tab_setting, values=self.database.get_city_list())
         self.destination_combo.pack(padx=25, pady=5)
 
-        #connect/disconnect button
+        # connect/disconnect button
         button1 = tk.Button(tab_setting, text="Połącz", command=lambda: self.manage_connection_button_handler(True))
         button1.pack(padx=5, pady=5)
+
         button2 = tk.Button(tab_setting, text="Rołącz", command=lambda: self.manage_connection_button_handler(False))
         button2.pack(padx=5, pady=5)
 
-        #selecting a neighborhood type
+        # selecting a neighborhood type
         var = tk.IntVar()
         r1 = tk.Radiobutton(tab_setting, text="Macierz sąsiedztwa", variable=var, value=1,
                             command=lambda: self.update_graph(self.graph_neighborhood_matrix))
@@ -66,23 +70,23 @@ class MainWindow():
         r2.pack(anchor=tk.W)
 
         self.tv_connections = ttk.Treeview(tab_setting)
-        self.tv_connections['columns'] = CITY_LIST
+        self.tv_connections['columns'] = self.database.get_city_list()
 
-        for city in CITY_LIST:
-            self.tv_connections.column(city, anchor=tk.CENTER, width=70)
+        for city in self.database.get_city_list():
+            self.tv_connections.column(city, anchor=tk.CENTER, width=70, stretch=0)
             self.tv_connections.heading(city, text=city, anchor=tk.CENTER)
 
-        self.tv_connections.column('#0', width=95, anchor=tk.W)
+        self.tv_connections.column('#0', width=95, anchor=tk.W, stretch=0)
         self.tv_connections.heading('#0', text='', anchor=tk.W)
 
-        self.update_connections_tree_list()
+        self.force_update_connections_tree_list()
 
         self.tv_connections.pack(padx=15, pady=15)
 
-        self.user_serach_start_combo = ttk.Combobox(tab_search_connection, values=CITY_LIST)
+        self.user_serach_start_combo = ttk.Combobox(tab_search_connection, values=self.database.get_city_list())
         self.user_serach_start_combo.pack(padx=25, pady=5)
 
-        self.user_serach_destination_combo = ttk.Combobox(tab_search_connection, values=CITY_LIST)
+        self.user_serach_destination_combo = ttk.Combobox(tab_search_connection, values=self.database.get_city_list())
         self.user_serach_destination_combo.pack(padx=25, pady=5)
 
         button3 = tk.Button(tab_search_connection, text="Szukaj", command=self.find_connection_button_handler)
@@ -93,57 +97,56 @@ class MainWindow():
 
         self.root.mainloop()
 
+    def on_reload_database(self):
+        self.force_update_connections_tree_list()
+
+    def on_update_database_connection(self, start, end, add):
+        old = [value for value in self.tv_connections.item(start, 'values')]
+        old[end] = 'X' if add else ''
+        self.tv_connections.item(start, values = old)
+
     def update_graph(self, graph):
-        graph.update()
         self.current_graph = graph
 
-    def update_connections_tree_list(self):
-        self.tv_connections.delete(*self.tv_connections.get_children()) #cleaning treeview
+    def force_update_connections_tree_list(self):
+        self.tv_connections.delete(*self.tv_connections.get_children())
         i = 0
-        for city in CITY_LIST:
+        for city in self.database.get_city_list():
+            city_id = self.database.get_city_id_by_name(city)
             connection_values = []
-            for connectionCity in CITY_LIST:
-                connection_values.append("X" if (city, connectionCity) in RAILWAY_CONNECTIONS else "")
+            for connection_city in range(len(self.database.get_city_list())):
+                connection_values.append("X" if self.database.has_connection(city_id, connection_city) else "")
             self.tv_connections.insert(parent='', index=i, iid=i, text=city, values=connection_values)
             i = i + 1
 
-    def find_connection_button_handler(self):
-        start = self.user_serach_start_combo.get().strip()
-        destination = self.user_serach_destination_combo.get().strip()
 
-        if not start or not destination:
+    def find_connection_button_handler(self):
+        start = self.user_serach_start_combo.current()
+        destination = self.user_serach_destination_combo.current()
+        if start == -1 or destination == -1:
             show_error_message_tk("Aby wyszukać połączenie musisz wybrać miejsce początkowe oraz docelowe!")
         path = self.current_graph.find_connection(start, destination)
         if not path:
             show_error_message_tk("Niestety nie udało nam się znaleść połączenia!")
             return
 
-        self.connections_label.config(text=", ".join(["{} -> {}".format(
-            self.current_graph.get_city_by_index(path[i - 1]), self.current_graph.get_city_by_index(path[i])) for i in
-                                                      range(1, len(path))]))
+        self.connections_label.config(text =  ", ".join(["{} -> {}".format(self.database.get_city_name_by_id(path[i - 1]), self.database.get_city_name_by_id(path[i])) for i in range(1, len(path)) ]))
+
 
     def manage_connection_button_handler(self, connect):
-        start = self.start_combo.get().strip()
-        destination = self.destination_combo.get().strip()
+        start = self.start_combo.current()
+        destination = self.destination_combo.current()
 
-        if not start or not destination:
+        if start == -1 or destination == -1:
             show_error_message_tk("Aby modyfikować połączenie musisz wybrać miejsce początkowe oraz docelowe!")
             return
         if start == destination:
             show_error_message_tk("Nie można modyfikować połączenia do tych samych miast!")
             return
-        connection = (start, destination)
-
         try:
-            exists_connection = connection in RAILWAY_CONNECTIONS
-            if (exists_connection and connect) or (not exists_connection and not connect):
-                raise RailwayConnectionError(connection,
-                                             RailwayConnectionErrorType.EXISTS if connect else RailwayConnectionErrorType.DO_NOT_EXISTS)
-            RAILWAY_CONNECTIONS.append(connection) if connect else RAILWAY_CONNECTIONS.remove(connection)
-            show_showinfo_message_tk("Pomyślnie {} połączenie {}-{}".format("dodano" if connect else "usunięto",
-                                                                                  start, destination))
-            self.update_connections_tree_list()
-            self.current_graph.update()
-
+            self.database.mange_connection(start, destination, connect)
+            show_showinfo_message_tk(
+                "Pomyślnie {} połączenie {}-{}".format("dodano" if connect else "usunięto", self.start_combo.get(),
+                                                       self.destination_combo.get()))
         except RailwayConnectionError as error:
             show_error_message(error)

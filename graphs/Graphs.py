@@ -8,25 +8,10 @@ class AbstractGraph:
         pass
 
     @abstractmethod
-    def get_index(self, city):
-        pass
-
-    @abstractmethod
-    def get_city_by_index(self, city_index):
-        pass
-
-    @abstractmethod
-    def update(self):
-        pass
-
-    @abstractmethod
     def debug_print(self):
         pass
 
-    def find_connection(self, start, destination):
-        start_index = self.get_index(start)
-        destination_index = self.get_index(destination)
-
+    def find_connection(self, start_index, destination_index):
         q = []
         path = [start_index]
         q.append(path.copy())
@@ -49,74 +34,83 @@ class AbstractGraph:
 
 
 class AdjacencyLists(AbstractGraph):
-    def __init__(self):
+    def __init__(self, database):
         self.adjacency_list = []
-        self.update()
-
-    def get_index(self, city):
-        return CITY_LIST.index(city)
-
-    def get_city_by_index(self, city_index):
-        return CITY_LIST[city_index]
+        self.database = database
+        self.database.add_update_callback(self.on_update)
+        self.database.add_realod_callback(self.on_reload)
+        self.force_update()
 
     def get_nodes(self, city_index):
         return self.adjacency_list[city_index]
 
-    def update(self):
+    def on_update(self, start, end, add):
+        self.adjacency_list[start].append(end) if add else self.adjacency_list[start].remove(end)
+
+    def on_reload(self):
+        self.force_update()
+
+    def force_update(self):
         self.adjacency_list.clear()
-        for start in CITY_LIST:
-            self.adjacency_list.append([city_index for city_index in range(len(CITY_LIST)) if (start, self.get_city_by_index(city_index)) in RAILWAY_CONNECTIONS])
+        city_list_len = len(self.database.get_city_list())
+        for start in range(city_list_len):
+            self.adjacency_list.append([city_index for city_index in range(city_list_len) if self.database.has_connection(start, city_index)])
 
     def debug_print(self):
         for city_index in range(len(self.adjacency_list)):
-            print(self.get_city_by_index(city_index) + " -> " + ",".join([ self.get_city_by_index(connection) for connection in self.adjacency_list[city_index]]))
+            print(self.database.get_city_name_by_id(city_index) + " -> " + ",".join([self.database.get_city_name_by_id(connection) for connection in self.adjacency_list[city_index]]))
 
 
 class NeighborhoodMatrix(AbstractGraph):
-    def __init__(self):
+    def __init__(self, database):
         self.matrix = []
-        self.update()
+        self.database = database
+        self.database.add_update_callback(self.on_update)
+        self.database.add_realod_callback(self.on_reload)
+        self.city_len = len(self.database.get_city_list())
+        self.force_update()
+
+    def on_update(self, start, end, add):
+        self.matrix[start * self.city_len + end] = True if add else False
+
+    def on_reload(self):
+        self.force_update()
 
     def is_connection(self, start, destination):
-        return self.matrix[start * len(CITY_LIST) + destination]
+        return self.matrix[start * self.city_len + destination]
 
-    def update(self):
+    def force_update(self):
         self.matrix.clear()
-        for start in CITY_LIST:
-            for destination in CITY_LIST:
-                self.matrix.append((start, destination) in RAILWAY_CONNECTIONS)
+        for start in range(self.city_len):
+            for destination in range(self.city_len):
+                self.matrix.append(self.database.has_connection(start, destination))
 
     def debug_print(self):
         max_column_len = 0
-        for column in CITY_LIST:
+        for column in self.database.get_city_list():
             max_column_len = max(len(column),max_column_len)
         max_column_len = max_column_len + 1
 
         for i in range(max_column_len):
             print(' ', end='')
 
-        for column in CITY_LIST:
+        for column in self.database.get_city_list():
             print(column, end=' ')
         print('')
 
-        for start in range(len(CITY_LIST)):
-            print(self.get_city_by_index(start), end='')
-            for i in range(max_column_len - len(self.get_city_by_index(start))):
+        for start in range(self.city_len):
+            print(self.database.get_city_name_by_id(start), end='')
+            for i in range(max_column_len - len(self.database.get_city_name_by_id(start))):
                 print(' ', end='')
-            for destination in range(len(CITY_LIST)):
-                current_city_len = len(self.get_city_by_index(destination))
+            for destination in range(self.city_len):
+                current_city_len = len(self.database.get_city_name_by_id(destination))
                 is_connected = str(self.is_connection(start, destination))
                 print(is_connected, end='')
                 if current_city_len > len(is_connected):
                     for i in range(current_city_len - len(is_connected) + 1):
                         print(' ', end='')
+
             print('')
 
     def get_nodes(self, city_index):
-        return [i for i in range(len(CITY_LIST)) if self.matrix[city_index * len(CITY_LIST) + i]]
-
-    def get_index(self, city):
-        return CITY_LIST.index(city)
-
-    def get_city_by_index(self, city_index):
-        return CITY_LIST[city_index]
+        return [i for i in range(self.city_len) if self.matrix[city_index * self.city_len + i]]

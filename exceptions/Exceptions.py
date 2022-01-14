@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class RailwayConnectionErrorType(Enum):
     EXISTS = 1
     DO_NOT_EXISTS = 2
