@@ -1,3 +1,5 @@
+"""Moduł graficzny projektu."""
+
 import tkinter as tk
 import tkinter.messagebox
 from tkinter import ttk
@@ -19,7 +21,9 @@ def show_error_message(error : RailwayConnectionError):
                                                                       "już istnieje" if error.error_type == RailwayConnectionErrorType.EXISTS else "nie istnieje"))
 
 class MainWindow():
+    """Klasa obsługująca główne okno programu."""
     def __init__(self):
+        """Inicjalizuje dane okna programu."""
         self.root = tk.Tk()
         self.database = Database(CITY_LIST, RAILWAY_CONNECTIONS)
         self.database.add_update_callback(self.on_update_database_connection)
@@ -51,14 +55,14 @@ class MainWindow():
         self.destination_combo = ttk.Combobox(tab_setting, values=self.database.get_city_list())
         self.destination_combo.pack(padx=25, pady=5)
 
-        # connect/disconnect button
+        # przyciski służące do połączenia/rozłączenia danych węzłów kolejowych
         button1 = tk.Button(tab_setting, text="Połącz", command=lambda: self.manage_connection_button_handler(True))
         button1.pack(padx=5, pady=5)
 
         button2 = tk.Button(tab_setting, text="Rołącz", command=lambda: self.manage_connection_button_handler(False))
         button2.pack(padx=5, pady=5)
 
-        # selecting a neighborhood type
+        #radiobutton służący do wyboru danego typu sąsiedztwa (macierz/lista)
         var = tk.IntVar()
         r1 = tk.Radiobutton(tab_setting, text="Macierz sąsiedztwa", variable=var, value=1,
                             command=lambda: self.update_graph(self.graph_neighborhood_matrix))
@@ -98,14 +102,24 @@ class MainWindow():
         self.root.mainloop()
 
     def on_reload_database(self):
+        """Funkcja służąca do aktualizacji bazy połączeń
+        """
         self.force_update_connections_tree_list()
 
     def on_update_database_connection(self, start, end, add):
+        """Funkcja służąca do ustawienia pozycji polączenia w danym wierszu macierzy.
+                :param start: miejscowość startowa.
+                :param end: miejscowość docelowa.
+        """
         old = [value for value in self.tv_connections.item(start, 'values')]
         old[end] = 'X' if add else ''
         self.tv_connections.item(start, values = old)
 
     def update_graph(self, graph):
+        """Funkcja służąca do aktualizacji grafu.
+                :param graph: miejscowość startowa.
+                :param end: miejscowość docelowa.
+        """
         self.current_graph = graph
 
     def force_update_connections_tree_list(self):
@@ -134,6 +148,7 @@ class MainWindow():
 
 
     def manage_connection_button_handler(self, connect):
+
         start = self.start_combo.current()
         destination = self.destination_combo.current()
 

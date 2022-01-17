@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4068123c-9275-41ed-84f7-8da850d64957" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/raport.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/Windows.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/Windows.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/Database.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/Database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exceptions/Exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/exceptions/Exceptions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/Graphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/Graphs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +51,7 @@
       <recent name="D:\Python\JS_Project" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test.TestSum">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="JS_Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
