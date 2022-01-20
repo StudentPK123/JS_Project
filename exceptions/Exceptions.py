@@ -1,24 +1,24 @@
 from enum import Enum
 
 class RailwayConnectionErrorType(Enum):
+    """Klasa pozwalająca na przekazanie jako parametr odpowiedniego argumentu (1 - istnieje, 2 - nie istnieje) określającego stan połączenia kolejowego"""
     EXISTS = 1
     DO_NOT_EXISTS = 2
 
     def __str__(self):
         if self.value == self.EXISTS.value:
-            return "already exists"
+            return "już istnieje"
         elif self.value == self.DO_NOT_EXISTS.value:
-            return "doesn't exists"
+            return "nie istnieje"
 
         return ""
 
 
 class RailwayConnectionError(Exception):
-    """Exception raised for errors in the railway connection.
+    """Klasa błędu wywoływana w przypadku błędów w połączeniu kolejowym.
 
-    Attributes:
-        connection -- connection which caused error
-        error_type -- what type of error
+        connection -- połączenie, które spowodowało błąd
+        error_type -- jaki typ błędu
     """
 
     def __init__(self, connection, error_type):

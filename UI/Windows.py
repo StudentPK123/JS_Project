@@ -8,14 +8,17 @@ from graphs.Graphs import *
 from exceptions.Exceptions import *
 
 def show_error_message_tk(error):
+    """Wyświetlenie okienka z tytułem "Błąd" oraz treścią błędu"""
     tk.messagebox.showerror(title="Bład",
                             message="{}".format(error))
 
 def show_showinfo_message_tk(info):
+    """Wyświetlenie okienka z tytułem "Sukces" oraz treścią sukcesu"""
     tk.messagebox.showinfo(title="Sukces",
                             message="{}".format(info))
 
 def show_error_message(error : RailwayConnectionError):
+    """Wyświetlenie okienka z tytułem "Bład" oraz treścią statusu połączenia między miastami w zależności od parametru z jakim została przesłana wiadomość"""
     tk.messagebox.showerror(title="Bład",
                             message=" Połączenie {} -> {} {}!".format(error.connection[0], error.connection[1],
                                                                       "już istnieje" if error.error_type == RailwayConnectionErrorType.EXISTS else "nie istnieje"))
@@ -102,28 +105,22 @@ class MainWindow():
         self.root.mainloop()
 
     def on_reload_database(self):
-        """Funkcja służąca do aktualizacji bazy połączeń
-        """
+        """Funkcja służąca do wywołania aktualizacji bazy połączeń"""
         self.force_update_connections_tree_list()
 
     def on_update_database_connection(self, start, end, add):
-        """Funkcja służąca do ustawienia pozycji polączenia w danym wierszu macierzy.
-                :param start: miejscowość startowa.
-                :param end: miejscowość docelowa.
-        """
+        """Funkcja służąca do ustawienia pozycji polączenia w danym wierszu macierzy."""
         old = [value for value in self.tv_connections.item(start, 'values')]
         old[end] = 'X' if add else ''
         self.tv_connections.item(start, values = old)
 
     def update_graph(self, graph):
-        """Funkcja służąca do aktualizacji grafu.
-                :param graph: miejscowość startowa.
-                :param end: miejscowość docelowa.
-        """
+        """Funkcja służąca do aktualizacji grafu"""
         self.current_graph = graph
 
     def force_update_connections_tree_list(self):
-        self.tv_connections.delete(*self.tv_connections.get_children())
+        """Funkcja służąca do aktualizacji/tworzenia bazy połączeń"""
+        self.tv_connections.delete(*self.tv_connections.get_children()) #usuwanie elementów z Treeview
         i = 0
         for city in self.database.get_city_list():
             city_id = self.database.get_city_id_by_name(city)
@@ -135,6 +132,7 @@ class MainWindow():
 
 
     def find_connection_button_handler(self):
+        """Funkcja służąca do znalezienia połączenia pomiędzy dwoma punktami wybranymi przez użytkownika"""
         start = self.user_serach_start_combo.current()
         destination = self.user_serach_destination_combo.current()
         if start == -1 or destination == -1:
@@ -148,7 +146,7 @@ class MainWindow():
 
 
     def manage_connection_button_handler(self, connect):
-
+        """Funkcja odpowiedzialna za poprawne dodawanie i usuwanie połączeń między dwoma miastami"""
         start = self.start_combo.current()
         destination = self.destination_combo.current()
 
