@@ -25,6 +25,7 @@ def show_error_message(error : RailwayConnectionError):
 
 class MainWindow():
     """Klasa obsługująca główne okno programu."""
+
     def __init__(self):
         """Inicjalizuje dane okna programu."""
         self.root = tk.Tk()

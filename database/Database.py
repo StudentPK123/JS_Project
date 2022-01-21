@@ -1,6 +1,6 @@
 from exceptions.Exceptions import *
 
-#list of cities with railway stations
+#lista miast z przystankami kolejowymi
 CITY_LIST = [
     "Kraków",
     "Katowice",
@@ -16,7 +16,7 @@ CITY_LIST = [
     "Kołobrzeg"
 ]
 
-#list of train connections between the various cities
+#lista połączeń kolejowych między poszczególnymi miastami
 RAILWAY_CONNECTIONS = [
     (0, 2),
     (0, 7),

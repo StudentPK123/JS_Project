@@ -37,6 +37,7 @@ class AbstractGraph:
 
 class AdjacencyLists(AbstractGraph):
     """Klasa operująca na liście sąsiedztwa"""
+
     def __init__(self, database):
         self.adjacency_list = []
         self.database = database
@@ -71,6 +72,7 @@ class AdjacencyLists(AbstractGraph):
 
 class NeighborhoodMatrix(AbstractGraph):
     """Klasa operująca na macierzy sąsiedztw"""
+
     def __init__(self, database):
         self.matrix = []
         self.database = database

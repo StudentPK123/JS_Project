@@ -2,6 +2,7 @@ from enum import Enum
 
 class RailwayConnectionErrorType(Enum):
     """Klasa pozwalająca na przekazanie jako parametr odpowiedniego argumentu (1 - istnieje, 2 - nie istnieje) określającego stan połączenia kolejowego"""
+
     EXISTS = 1
     DO_NOT_EXISTS = 2
 
